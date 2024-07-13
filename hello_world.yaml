@@ -1,0 +1,37 @@
+---
+- name: Print Hello World! Playbook
+  hosts: dbsvr
+  gather_facts: false
+  become: true #Specifies that the tasks require privelege escallation
+    #become_method: sudo # method used for privelege escallation - sudo
+    #become_user: root
+    #check_mode: true # dry_run
+    #diff: true
+    #remote_user: ansible
+    #ignore_errors: true
+    #import_tasks: other_tasks
+    #include_tasks: other.yaml
+    #changed_when: true
+    #failed_when: false
+  vars:
+    message: "Hello to New Era Solutions"
+    dir_path: "/home/ubuntu"
+  tasks:
+    - name: Print Hello World task
+      ansible.builtin.debug:
+        msg: "{{ message }}"
+
+    - name: Ping the hosts
+      ansible.builtin.ping:
+
+    - name: Check if Directory Exists
+      ansible.builtin.stat:
+        path: "{{ dir_path }}"
+      register: dir_status
+
+    - name: Create a new file
+      ansible.builtin.file:
+        path: /home/ubuntu/new-era.txt
+        state: touch
+        mode: '0644'
+      when: dir_status.stat.exists
